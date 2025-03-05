@@ -38,3 +38,4 @@ jobs:
           jq -s '{ 
               open_issues:  map(.[0][]) | map({title: .title, url: .html_url, created_at: .created_at}),
               closed_issues: map(.[1][]) | map({title: .title, ur
+
