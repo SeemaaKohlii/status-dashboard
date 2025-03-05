@@ -1,4 +1,4 @@
-name: Update Milestone Dashboard
+name: Update Issues Dashboard
 
 on:
   schedule:
@@ -15,47 +15,26 @@ jobs:
         with:
           fetch-depth: 0  # Ensures full commit history
 
-      - name: Fetch Milestone Issues from GitHub API
+      - name: Fetch All Open and Closed Issues from GitHub API
         run: |
-          echo "Fetching milestone issues from GitHub API..."
+          echo "Fetching all issues from GitHub API..."
 
-          MILESTONE_TITLE="v1.0"  # Change this to your milestone title
-          
-          # Get Milestone ID
-          MILESTONE_ID=$(curl -s -H "Accept: application/vnd.github.v3+json" \
-            -H "Authorization: Bearer ${{ secrets.PAT_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/milestones" | \
-            jq -r ".[] | select(.title == \"${MILESTONE_TITLE}\") | .number")
-
-          if [ -z "$MILESTONE_ID" ]; then
-            echo "Milestone '${MILESTONE_TITLE}' not found!"
-            exit 1
-          fi
-
-          # Fetch Open and Closed Issues for Milestone
+          # Fetch Open Issues
           curl -s -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: Bearer ${{ secrets.PAT_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/issues?milestone=${MILESTONE_ID}&state=all" \
-            > issues_raw.json
+            "https://api.github.com/repos/${{ github.repository }}/issues?state=open" \
+            > open_issues.json
+
+          # Fetch Closed Issues
+          curl -s -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: Bearer ${{ secrets.PAT_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/issues?state=closed" \
+            > closed_issues.json
 
       - name: Process Issues Data
         run: |
-          echo "Processing milestone issues data..."
+          echo "Processing issues data..."
 
-          jq 'group_by(.state) | 
-              {
-                open_issues: [.[0][] | select(.state=="open") | {title: .title, url: .html_url}],
-                closed_issues: [.[1][] | select(.state=="closed") | {title: .title, url: .html_url}]
-              }' issues_raw.json > status.json
-
-          echo "Final status.json output:"
-          cat status.json  # Print output for debugging
-
-      - name: Commit and Push Changes
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "actions@github.com"
-
-          git add status.json
-          git commit -m "Updated milestone issue list on $(date)" || echo "No new changes to commit."
-          git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git || echo "Push failed. Check logs."
+          jq -s '{ 
+              open_issues:  map(.[0][]) | map({title: .title, url: .html_url, created_at: .created_at}),
+              closed_issues: map(.[1][]) | map({title: .title, ur
