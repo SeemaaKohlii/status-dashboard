@@ -1,41 +1,33 @@
-name: Update Issues Dashboard
+name: Update Status Dashboard
 
 on:
   schedule:
-    - cron: "0 * * * *"  # Runs every hour
+    - cron: '*/15 * * * *'  # Runs every 15 minutes
   workflow_dispatch:  # Allows manual trigger
 
 jobs:
-  update-dashboard:
+  update-status:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Ensures full commit history
+        uses: actions/checkout@v3
 
-      - name: Fetch All Open and Closed Issues from GitHub API
+      - name: Fetch Open and Closed Issues
         run: |
-          echo "Fetching all issues from GitHub API..."
+          echo "Fetching open and closed issues from GitHub API..."
 
-          # Fetch Open Issues
+          # Get Open Issues
           curl -s -H "Accept: application/vnd.github.v3+json" \
-            -H "Authorization: Bearer ${{ secrets.PAT_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/issues?state=open" \
-            > open_issues.json
-
-          # Fetch Closed Issues
+               -H "Authorization: Bearer ${{ secrets.PAT_TOKEN }}" \
+               "https://api.github.com/repos/${{ github.repository }}/issues?state=open" > open_issues.json
+          
+          # Get Closed Issues
           curl -s -H "Accept: application/vnd.github.v3+json" \
-            -H "Authorization: Bearer ${{ secrets.PAT_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/issues?state=closed" \
-            > closed_issues.json
+               -H "Authorization: Bearer ${{ secrets.PAT_TOKEN }}" \
+               "https://api.github.com/repos/${{ github.repository }}/issues?state=closed" > closed_issues.json
 
-      - name: Process Issues Data
-        run: |
-          echo "Processing issues data..."
+          echo "Fetched issues. Checking JSON validity..."
 
-          jq -s '{ 
-              open_issues:  map(.[0][]) | map({title: .title, url: .html_url, created_at: .created_at}),
-              closed_issues: map(.[1][]) | map({title: .title, ur
-
+          # Debug raw JSON responses
+          echo "
