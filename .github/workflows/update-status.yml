@@ -27,5 +27,8 @@ jobs:
           git pull origin main --rebase  # Pull the latest changes before committing
           git add status.json
           git diff --staged --quiet || git commit -m "Updated status dashboard"
+          git stash  # Stash any unstaged changes
+          git pull origin main --rebase  # Pull latest changes without conflict
+          git stash pop || echo "No stashed changes to apply"
           git push https://x-access-token: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@github.com/SeemaaKohlii/status-dashboard.git
           git push
