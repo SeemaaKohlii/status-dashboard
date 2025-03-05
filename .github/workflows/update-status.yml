@@ -1,34 +1,67 @@
-name: Status Dashboard Update
+name: Update Status Dashboard
 
 on:
+  push:
+    branches:
+      - main
   schedule:
-    - cron: "0 12 * * *"  # Runs daily at 12 PM UTC
-  workflow_dispatch:      # Allows manual trigger
+    - cron: "0 * * * *" # Runs every hour
 
 jobs:
-  update-status:
+  update-dashboard:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Ensures we have full commit history
 
-      - name: Fetch Open Issues from GitHub API
-        run: |
-          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-               -H "Accept: application/vnd.github.v3+json" \
-               "https://api.github.com/repos/${{ github.repository }}/issues?state=open" \
-               | jq '.' > status.json
-
-      - name: Commit and Push Status File
+      - name: Set Up Git
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
-          git pull origin main --rebase  # Pull the latest changes before committing
-          git add status.json
-          git diff --staged --quiet || git commit -m "Updated status dashboard"
-          git stash  # Stash any unstaged changes
-          git pull origin main --rebase  # Pull latest changes without conflict
-          git stash pop || echo "No stashed changes to apply"
-          git push https://x-access-token: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@github.com/SeemaaKohlii/status-dashboard.git
-          
+
+      - name: Check Git Status
+        run: |
+          echo "Checking current status..."
+          git status
+          git remote -v
+
+      - name: Stash Local Changes (if any)
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "Unstaged changes detected. Stashing..."
+            git stash
+          else
+            echo "No changes to stash."
+          fi
+
+      - name: Pull Latest Changes
+        run: |
+          git pull origin main --rebase || (git rebase --abort && git pull --ff-only origin main)
+
+      - name: Apply Stashed Changes (if any)
+        run: |
+          if git stash list | grep -q "stash@{0}"; then
+            echo "Applying stashed changes..."
+            git stash pop || echo "Merge conflicts detected. Resolve manually."
+          else
+            echo "No stashed changes to apply."
+          fi
+
+      - name: Update Status Dashboard
+        run: |
+          echo "Updating status dashboard..."
+          # Simulate an update to a JSON status file
+          echo "{\"status\": \"updated\", \"timestamp\": \"$(date)\"}" > status.json
+
+      - name: Commit and Push Changes
+        run: |
+          git add .
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Updated status dashboard"
+            git push https://x-access-token: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@github.com/SeemaaKohlii/status-dashboard.git
+          fi
