@@ -1,31 +1,58 @@
-- name: Fetch Issues
-  run: |
-    echo "Fetching issues from GitHub API..."
+name: Update Status Dashboard
 
-    # Fetch Open and Closed Issues
-    curl -s -H "Accept: application/vnd.github.v3+json" \
-         -H "Authorization: Bearer ${{ secrets.PAT_TOKEN }}" \
-         "https://api.github.com/repos/${{ github.repository }}/issues" > issues_raw.json
+on:
+  schedule:
+    - cron: "0 * * * *"  # Runs every hour
+  workflow_dispatch:  # Allows manual trigger
 
-    # Debug: Print API response
-    echo "Raw API response:"
-    cat issues_raw.json
+jobs:
+  update-dashboard:
+    runs-on: ubuntu-latest
 
-    # Check if response contains an error message
-    if grep -q '"message":' issues_raw.json; then
-      echo "Error in API response:"
-      cat issues_raw.json
-      exit 1
-    fi
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Ensures full commit history
 
-    # Validate JSON format
-    if ! jq empty issues_raw.json; then
-      echo "Invalid JSON response!"
-      exit 1
-    fi
+      - name: Set Up Git Config
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
 
-    # Extract required issue details
-    jq '[.[] | {title, state, created_at, url}]' issues_raw.json > status.json
+      - name: Debug Git Status
+        run: |
+          echo "Checking repository status before update..."
+          git status
+          git remote -v
 
-    echo "Processed status.json:"
-    cat status.json
+      - name: Fetch Open Issues from GitHub API
+        run: |
+          echo "Fetching open issues from GitHub API..."
+          curl -s -H "Accept: application/vnd.github.v3+json" \
+               -H "Authorization: Bearer ${{ secrets.PAT_TOKEN }}" \
+               "https://api.github.com/repos/${{ github.repository }}/issues?state=open" > issues_raw.json
+
+          echo "API Response:"
+          cat issues_raw.json  # Print response for debugging
+
+      - name: Process Issues Data
+        run: |
+          echo "Processing issues data..."
+
+          if jq empty issues_raw.json 2>/dev/null; then
+            echo "Valid JSON detected. Parsing issues..."
+            jq '[.[] | {title: .title, url: .html_url, created_at: .created_at}]' issues_raw.json > status.json
+          else
+            echo "Error: Invalid JSON response from API."
+            exit 1  # Fails workflow if response is not valid JSON
+          fi
+
+          echo "Final status.json output:"
+          cat status.json  # Print output for debugging
+
+      - name: Commit and Push Changes
+        run: |
+          git add status.json
+          git commit -m "Updated issue list on $(date)" || echo "No new changes to commit."
+          git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git || echo "Push failed. Check logs."
