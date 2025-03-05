@@ -5,3 +5,51 @@ on:
     - cron: '*/15 * * * *'  # Runs every 15 minutes
   workflow_dispatch:  # Allows manual trigger
 
+jobs:
+  update-status:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Fetch Open and Closed Issues
+        run: |
+          echo "Fetching open and closed issues from GitHub API..."
+          
+          # Get Open Issues
+          curl -s -H "Accept: application/vnd.github.v3+json" \
+               -H "Authorization: Bearer ${{ secrets.PAT_TOKEN }}" \
+               "https://api.github.com/repos/${{ github.repository }}/issues?state=open" > open_issues.json
+          
+          # Get Closed Issues
+          curl -s -H "Accept: application/vnd.github.v3+json" \
+               -H "Authorization: Bearer ${{ secrets.PAT_TOKEN }}" \
+               "https://api.github.com/repos/${{ github.repository }}/issues?state=closed" > closed_issues.json
+
+          echo "Fetched issues. Checking JSON validity..."
+
+          # Debug raw JSON responses
+          echo "Open Issues JSON:"
+          cat open_issues.json
+          echo "Closed Issues JSON:"
+          cat closed_issues.json
+
+          # Validate JSON files
+          if jq empty open_issues.json && jq empty closed_issues.json; then
+            echo "Valid JSON received. Processing issues..."
+          else
+            echo "Error: Invalid JSON response from API."
+            exit 1
+          fi
+
+          # Extract relevant issue details and merge into one JSON file
+          jq -s '{open_issues: .[0], closed_issues: .[1]}' open_issues.json closed_issues.json > status.json
+
+          echo "Final status.json output:"
+          cat status.json
+
+      - name: Commit and Push Changes
+        run: |
+          echo "Checking for changes in status.json..."
+          git config --global us
