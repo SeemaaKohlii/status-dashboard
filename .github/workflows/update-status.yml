@@ -3,7 +3,7 @@ name: Update Status Dashboard
 on:
   schedule:
     - cron: "0 * * * *"  # Runs every hour
-  workflow_dispatch:      # Allows manual trigger
+  workflow_dispatch:  # Allows manual trigger
 
 jobs:
   update-dashboard:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Ensures we have full commit history
+          fetch-depth: 0  # Ensures full commit history
 
       - name: Set Up Git Config
         run: |
@@ -29,63 +29,30 @@ jobs:
       - name: Fetch Open Issues from GitHub API
         run: |
           echo "Fetching open issues from GitHub API..."
-          RESPONSE=$(curl -s -H "Accept: application/vnd.github.v3+json" \
-                          -H "Authorization: Bearer ${{ secrets.PAT_TOKEN }}" \
-                          "https://api.github.com/repos/${{ github.repository }}/issues?state=open")
+          curl -s -H "Accept: application/vnd.github.v3+json" \
+               -H "Authorization: Bearer ${{ secrets.PAT_TOKEN }}" \
+               "https://api.github.com/repos/${{ github.repository }}/issues?state=open" > issues_raw.json
 
-          echo "$RESPONSE" > issues_raw.json
-          cat issues_raw.json  # Print raw API response for debugging
+          echo "API Response:"
+          cat issues_raw.json  # Print response for debugging
 
       - name: Process Issues Data
         run: |
-          echo "Processing issues data using jq..."
+          echo "Processing issues data..."
+
           if jq empty issues_raw.json 2>/dev/null; then
-            echo "Valid JSON detected. Parsing..."
+            echo "Valid JSON detected. Parsing issues..."
             jq '[.[] | {title: .title, url: .html_url, created_at: .created_at}]' issues_raw.json > status.json
           else
             echo "Error: Invalid JSON response from API."
-            exit 1  # Fails the workflow if API response is not valid JSON
+            exit 1  # Fails workflow if response is not valid JSON
           fi
 
-      - name: Debug Processed JSON
-        run: |
-          echo "Checking processed JSON file..."
-          cat status.json  # Print the final status.json output
-
-      - name: Stash Local Changes (If Any)
-        run: |
-          if [[ -n $(git status --porcelain) ]]; then
-            echo "Unstaged changes detected. Stashing..."
-            git stash
-          else
-            echo "No changes to stash."
-          fi
-
-      - name: Pull Latest Changes from Main
-        run: |
-          echo "Pulling latest changes..."
-          git pull origin main --rebase || (git rebase --abort && git pull --ff-only origin main)
-
-      - name: Apply Stashed Changes (If Any)
-        run: |
-          if git stash list | grep -q "stash@{0}"; then
-            echo "Applying stashed changes..."
-            git stash pop || echo "Merge conflicts detected. Resolve manually."
-          else
-            echo "No stashed changes to apply."
-          fi
-
-      - name: Check If Changes Exist
-        run: |
-          if git diff --staged --quiet; then
-            echo "No changes detected in status.json. Skipping commit."
-            exit 0  # Exits without failing the workflow
-          else
-            echo "Changes detected. Preparing to commit."
-          fi
+          echo "Final status.json output:"
+          cat status.json  # Print output for debugging
 
       - name: Commit and Push Changes
         run: |
           git add status.json
-          git commit -m "Updated issue list on $(date)"
-          git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git
+          git commit -m "Updated issue list on $(date)" || echo "No new changes to commit."
+          git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git || echo "Push failed. Check logs."
