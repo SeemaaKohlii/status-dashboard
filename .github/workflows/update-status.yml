@@ -27,5 +27,5 @@ jobs:
           git pull origin main --rebase  # Pull the latest changes before committing
           git add status.json
           git diff --staged --quiet || git commit -m "Updated status dashboard"
-          git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git
+          git push https://x-access-token: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@github.com/SeemaaKohlii/status-dashboard.git
           git push
