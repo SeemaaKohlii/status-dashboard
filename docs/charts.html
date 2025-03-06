@@ -52,4 +52,24 @@
             });
 
             // Bar Chart for Issues per Label
-            new Chart(d
+            new Chart(document.getElementById("labelsChart").getContext("2d"), {
+                type: "bar",
+                data: {
+                    labels: Object.keys(labelCounts),
+                    datasets: [{
+                        label: "Number of Issues",
+                        data: Object.values(labelCounts),
+                        backgroundColor: "#4bc0c0"
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+
+        fetchIssuesData();
+    </script>
+</body>
+</html>
