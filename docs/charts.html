@@ -24,7 +24,7 @@
 
     <script>
         async function fetchIssuesData() {
-            const response = await fetch("status.json"); // Update this if needed
+            const response = await fetch("docs/status.json"); // Update this if needed
             const data = await response.json();
             
             let openIssues = 0, closedIssues = 0;
