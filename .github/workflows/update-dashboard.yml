@@ -19,7 +19,9 @@ jobs:
           curl -s -H "Accept: application/vnd.github.v3+json" \
                -H "Authorization: Bearer ${{ secrets.PAT_TOKEN }}" \
                "https://api.github.com/repos/${{ github.repository }}/issues?state=all" > issues_raw.json
-
+          echo "Raw API Response:"
+          cat issues_raw.json  # 🔍 Print JSON response for debugging
+          
           echo "Validating JSON..."
           if ! jq -e 'if type == "array" then . else empty end' issues_raw.json; then
             echo "Error: API did not return an array!"
