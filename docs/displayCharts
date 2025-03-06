@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Issues Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        async function loadIssues() {
+            const response = await fetch("status.json");
+            const data = await response.json();
+            
+            // Update Issue Lists
+            document.getElementById("open-issues").innerHTML = data.open_issues.map(issue =>
+                `<li><a href="${issue.url}" target="_blank">${issue.title}</a></li>`
+            ).join("");
+
+            document.getElementById("closed-issues").innerHTML = data.closed_issues.map(issue =>
+                `<li><a href="${issue.url}" target="_blank">${issue.title}</a></li>`
+            ).join("");
+
+            // Prepare Data for Charts
+            const openCount = data.open_issues.length;
+            const closedCount = data.closed_issues.length;
+
+            // Pie Chart - Open vs Closed Issues
+            const ctxPie = document.getElementById("issuesPieChart").getContext("2d");
+            new Chart(ctxPie, {
+                type: "pie",
+                data: {
+                    labels: ["Open Issues", "Closed Issues"],
+                    datasets: [{
+                        data: [openCount, closedCount],
+                        backgroundColor: ["#ff6384", "#36a2eb"]
+                    }]
+                }
+            });
+
+            // Bar Chart - Issues Created Over Time
+            const allIssues = [...data.open_issues, ...data.closed_issues];
+            const issuesByDate = allIssues.reduce((acc, issue) => {
+                const date = issue.created_at.split("T")[0]; // Extract YYYY-MM-DD
+                acc[date] = (acc[date] || 0) + 1;
+                return acc;
+            }, {});
+
+            const dates = Object.keys(issuesByDate).sort();
+            const counts = dates.map(date => issuesByDate[date]);
+
+            const ctxBar = document.getElementById("issuesBarChart").getContext("2d");
+            new Chart(ctxBar, {
+                type: "bar",
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: "Issues Created",
+                        data: counts,
+                        backgroundColor: "#4CAF50"
+                    }]
+                }
+            });
+        }
+
+        window.onload = loadIssues;
+    </script>
+</head>
+<body>
+    <h1>GitHub Issues Dashboard</h1>
+
+    <h2>Open Issues</h2>
+    <ul id="open-issues">Loading...</ul>
+
+    <h2>Closed Issues</h2>
+    <ul id="closed-issues">Loading...</ul>
+
+    <h2>Issue Breakdown</h2>
+    <canvas id="issuesPieChart" width="400" height="400"></canvas>
+
+    <h2>Issues Created Over Time</h2>
+    <canvas id="issuesBarChart" width="600" height="400"></canvas>
+
+</body>
+</html>
