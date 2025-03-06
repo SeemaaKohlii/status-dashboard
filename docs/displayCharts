@@ -3,23 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Issues Dashboard</title>
+    <title>Issues Charts</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        async function loadIssues() {
+        async function loadCharts() {
             const response = await fetch("status.json");
             const data = await response.json();
             
-            // Update Issue Lists
-            document.getElementById("open-issues").innerHTML = data.open_issues.map(issue =>
-                `<li><a href="${issue.url}" target="_blank">${issue.title}</a></li>`
-            ).join("");
-
-            document.getElementById("closed-issues").innerHTML = data.closed_issues.map(issue =>
-                `<li><a href="${issue.url}" target="_blank">${issue.title}</a></li>`
-            ).join("");
-
-            // Prepare Data for Charts
             const openCount = data.open_issues.length;
             const closedCount = data.closed_issues.length;
 
@@ -39,7 +29,7 @@
             // Bar Chart - Issues Created Over Time
             const allIssues = [...data.open_issues, ...data.closed_issues];
             const issuesByDate = allIssues.reduce((acc, issue) => {
-                const date = issue.created_at.split("T")[0]; // Extract YYYY-MM-DD
+                const date = issue.created_at.split("T")[0]; 
                 acc[date] = (acc[date] || 0) + 1;
                 return acc;
             }, {});
@@ -61,23 +51,19 @@
             });
         }
 
-        window.onload = loadIssues;
+        window.onload = loadCharts;
     </script>
 </head>
 <body>
-    <h1>GitHub Issues Dashboard</h1>
-
-    <h2>Open Issues</h2>
-    <ul id="open-issues">Loading...</ul>
-
-    <h2>Closed Issues</h2>
-    <ul id="closed-issues">Loading...</ul>
-
-    <h2>Issue Breakdown</h2>
+    <h1>GitHub Issues - Graphical Dashboard</h1>
+    
+    <h2>📊 Issue Breakdown</h2>
     <canvas id="issuesPieChart" width="400" height="400"></canvas>
 
-    <h2>Issues Created Over Time</h2>
+    <h2>📅 Issues Created Over Time</h2>
     <canvas id="issuesBarChart" width="600" height="400"></canvas>
 
+    <br>
+    <a href="index.html">⬅️ Back to Issue List</a>
 </body>
 </html>
