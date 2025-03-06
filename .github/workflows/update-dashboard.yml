@@ -51,5 +51,4 @@ jobs:
 
           git add docs/status.json
           git diff --cached --exit-code || (git commit -m "Update status.json" && git push)
-          git commit -m "Updated issue list"
-          git push
+         
