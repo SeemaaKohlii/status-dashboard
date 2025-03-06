@@ -3,67 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Issues Charts</title>
+    <title>Issue Charts</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        canvas { max-width: 600px; margin: 20px auto; display: block; }
+    </style>
+</head>
+<body>
+    <h1>Issue Statistics</h1>
+    <nav>
+        <a href="index.html">Dashboard</a> | <a href="charts.html">Charts</a>
+    </nav>
+
+    <h2>Open vs. Closed Issues</h2>
+    <canvas id="issuesChart"></canvas>
+
+    <h2>Issues Per Label</h2>
+    <canvas id="labelsChart"></canvas>
+
     <script>
-        async function loadCharts() {
-            const response = await fetch("status.json");
+        async function fetchIssuesData() {
+            const response = await fetch("status.json"); // Update this if needed
             const data = await response.json();
             
-            const openCount = data.open_issues.length;
-            const closedCount = data.closed_issues.length;
+            let openIssues = 0, closedIssues = 0;
+            let labelCounts = {};
 
-            // Pie Chart - Open vs Closed Issues
-            const ctxPie = document.getElementById("issuesPieChart").getContext("2d");
-            new Chart(ctxPie, {
+            data.forEach(issue => {
+                if (issue.state === "open") openIssues++;
+                else if (issue.state === "closed") closedIssues++;
+
+                issue.labels.forEach(label => {
+                    labelCounts[label] = (labelCounts[label] || 0) + 1;
+                });
+            });
+
+            // Pie Chart for Open vs. Closed Issues
+            new Chart(document.getElementById("issuesChart").getContext("2d"), {
                 type: "pie",
                 data: {
                     labels: ["Open Issues", "Closed Issues"],
                     datasets: [{
-                        data: [openCount, closedCount],
+                        data: [openIssues, closedIssues],
                         backgroundColor: ["#ff6384", "#36a2eb"]
                     }]
                 }
             });
 
-            // Bar Chart - Issues Created Over Time
-            const allIssues = [...data.open_issues, ...data.closed_issues];
-            const issuesByDate = allIssues.reduce((acc, issue) => {
-                const date = issue.created_at.split("T")[0]; 
-                acc[date] = (acc[date] || 0) + 1;
-                return acc;
-            }, {});
-
-            const dates = Object.keys(issuesByDate).sort();
-            const counts = dates.map(date => issuesByDate[date]);
-
-            const ctxBar = document.getElementById("issuesBarChart").getContext("2d");
-            new Chart(ctxBar, {
-                type: "bar",
-                data: {
-                    labels: dates,
-                    datasets: [{
-                        label: "Issues Created",
-                        data: counts,
-                        backgroundColor: "#4CAF50"
-                    }]
-                }
-            });
-        }
-
-        window.onload = loadCharts;
-    </script>
-</head>
-<body>
-    <h1>GitHub Issues - Graphical Dashboard</h1>
-    
-    <h2>📊 Issue Breakdown</h2>
-    <canvas id="issuesPieChart" width="400" height="400"></canvas>
-
-    <h2>📅 Issues Created Over Time</h2>
-    <canvas id="issuesBarChart" width="600" height="400"></canvas>
-
-    <br>
-    <a href="index.html">⬅️ Back to Issue List</a>
-</body>
-</html>
+            // Bar Chart for Issues per Label
+            new Chart(d
