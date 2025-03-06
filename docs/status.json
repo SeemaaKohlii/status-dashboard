@@ -3,180 +3,293 @@
     "title": "Using GitHub Actions to Notify Users of Upcoming Eclipses",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/30",
-    "created_at": "2025-03-06T11:59:15Z"
+    "created_at": "2025-03-06T11:59:15Z",
+    "labels": [
+      "story",
+      "low"
+    ]
   },
   {
     "title": "Creating a GitHub Archive of Historical Astronomical Observations",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/29",
-    "created_at": "2025-03-06T11:58:55Z"
+    "created_at": "2025-03-06T11:58:55Z",
+    "labels": [
+      "story",
+      "low"
+    ]
   },
   {
     "title": "Collaborative Mapping of the Milky Way Using Open Data",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/28",
-    "created_at": "2025-03-06T11:58:36Z"
+    "created_at": "2025-03-06T11:58:36Z",
+    "labels": [
+      "story",
+      "low"
+    ]
   },
   {
     "title": "Automating Image Processing for Astrophotography",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/27",
-    "created_at": "2025-03-06T11:58:14Z"
+    "created_at": "2025-03-06T11:58:14Z",
+    "labels": [
+      "story",
+      "low"
+    ]
   },
   {
     "title": "Building a GitHub-Powered Astronomy Education Platform",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/26",
-    "created_at": "2025-03-06T11:57:55Z"
+    "created_at": "2025-03-06T11:57:55Z",
+    "labels": [
+      "story",
+      "low"
+    ]
   },
   {
     "title": "Tracking Solar Flares and Space Weather Events Automatically",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/25",
-    "created_at": "2025-03-06T11:57:32Z"
+    "created_at": "2025-03-06T11:57:32Z",
+    "labels": [
+      "story",
+      "medium"
+    ]
   },
   {
     "title": "Developing a Machine Learning Model for Star Classification",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/24",
-    "created_at": "2025-03-06T11:57:11Z"
+    "created_at": "2025-03-06T11:57:11Z",
+    "labels": [
+      "story",
+      "medium"
+    ]
   },
   {
     "title": "Building an Open-Source Catalog of Galaxies and Nebulae",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/23",
-    "created_at": "2025-03-06T11:56:49Z"
+    "created_at": "2025-03-06T11:56:49Z",
+    "labels": [
+      "story",
+      "medium"
+    ]
   },
   {
     "title": "Using GitHub Actions for Real-Time Astronomy Alerts",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/22",
-    "created_at": "2025-03-06T11:56:31Z"
+    "created_at": "2025-03-06T11:56:31Z",
+    "labels": [
+      "story",
+      "medium"
+    ]
   },
   {
     "title": "Creating a Public Repository for Space Exploration Data",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/21",
-    "created_at": "2025-03-06T11:56:26Z"
+    "created_at": "2025-03-06T11:56:26Z",
+    "labels": [
+      "story",
+      "medium"
+    ]
   },
   {
     "title": "Automating Deep Sky Object (DSO) Observations",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/20",
-    "created_at": "2025-03-06T11:55:33Z"
+    "created_at": "2025-03-06T11:55:33Z",
+    "labels": [
+      "story",
+      "medium"
+    ]
   },
   {
     "title": "Simulating Black Hole Orbits Using Open-Source Code",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/19",
-    "created_at": "2025-03-06T11:55:11Z"
+    "created_at": "2025-03-06T11:55:11Z",
+    "labels": [
+      "story",
+      "medium"
+    ]
   },
   {
     "title": "Analyzing Historical Astronomical Data with AI",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/18",
-    "created_at": "2025-03-06T11:54:32Z"
+    "created_at": "2025-03-06T11:54:32Z",
+    "labels": [
+      "story",
+      "medium"
+    ]
   },
   {
     "title": "Tracking International Space Station (ISS) Passes",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/17",
-    "created_at": "2025-03-06T11:54:10Z"
+    "created_at": "2025-03-06T11:54:10Z",
+    "labels": [
+      "story",
+      "medium"
+    ]
   },
   {
     "title": "Building a GitHub Dashboard for Planetary Positions",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/16",
-    "created_at": "2025-03-06T11:53:51Z"
+    "created_at": "2025-03-06T11:53:51Z",
+    "labels": [
+      "story",
+      "medium"
+    ]
   },
   {
     "title": "Automating Telescope Control with Python & GitHub",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/15",
-    "created_at": "2025-03-06T11:52:56Z"
+    "created_at": "2025-03-06T11:52:56Z",
+    "labels": [
+      "story",
+      "medium"
+    ]
   },
   {
     "title": "Predicting Meteor Showers with Data Science",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/14",
-    "created_at": "2025-03-06T11:52:14Z"
+    "created_at": "2025-03-06T11:52:14Z",
+    "labels": [
+      "story",
+      "medium"
+    ]
   },
   {
     "title": "Automating Space Weather Alerts for Amateur Astronomers",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/13",
-    "created_at": "2025-03-06T11:51:52Z"
+    "created_at": "2025-03-06T11:51:52Z",
+    "labels": [
+      "story",
+      "medium"
+    ]
   },
   {
     "title": "Crowdsourcing Astronomical Image Analysis with AI",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/12",
-    "created_at": "2025-03-06T11:51:29Z"
+    "created_at": "2025-03-06T11:51:29Z",
+    "labels": [
+      "story",
+      "medium"
+    ]
   },
   {
     "title": "Collaborative Research on Supernovae Using GitHub",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/11",
-    "created_at": "2025-03-06T11:51:04Z"
+    "created_at": "2025-03-06T11:51:04Z",
+    "labels": [
+      "story",
+      "medium"
+    ]
   },
   {
     "title": "Automating Satellite Tracking with Open Source Tools",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/10",
-    "created_at": "2025-03-06T11:50:16Z"
+    "created_at": "2025-03-06T11:50:16Z",
+    "labels": [
+      "story",
+      "medium"
+    ]
   },
   {
     "title": "Visualizing Exoplanet Discoveries Using GitHub Pages",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/9",
-    "created_at": "2025-03-06T11:49:50Z"
+    "created_at": "2025-03-06T11:49:50Z",
+    "labels": [
+      "story",
+      "high"
+    ]
   },
   {
     "title": "Monitoring Near-Earth Objects (NEOs) with Python",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/8",
-    "created_at": "2025-03-06T11:49:02Z"
+    "created_at": "2025-03-06T11:49:02Z",
+    "labels": [
+      "story",
+      "high"
+    ]
   },
   {
     "title": "Creating an Interactive Sky Map with Open Data",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/7",
-    "created_at": "2025-03-06T11:47:43Z"
+    "created_at": "2025-03-06T11:47:43Z",
+    "labels": [
+      "story",
+      "high"
+    ]
   },
   {
     "title": "Building a Star Observation Log with GitHub Actions",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/6",
-    "created_at": "2025-03-06T11:47:19Z"
+    "created_at": "2025-03-06T11:47:19Z",
+    "labels": [
+      "story",
+      "high"
+    ]
   },
   {
     "title": "Automating Astronomical Data Collection Using APIs",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/5",
-    "created_at": "2025-03-06T11:46:39Z"
+    "created_at": "2025-03-06T11:46:39Z",
+    "labels": [
+      "story",
+      "high"
+    ]
   },
   {
     "title": "Tracking Celestial Events",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/4",
-    "created_at": "2025-03-06T11:44:17Z"
+    "created_at": "2025-03-06T11:44:17Z",
+    "labels": [
+      "story",
+      "high"
+    ]
   },
   {
     "title": "Item Road3",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/3",
-    "created_at": "2025-03-05T16:57:55Z"
+    "created_at": "2025-03-05T16:57:55Z",
+    "labels": [
+      "enhancement"
+    ]
   },
   {
     "title": "Item Road2",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/2",
-    "created_at": "2025-03-05T16:57:46Z"
+    "created_at": "2025-03-05T16:57:46Z",
+    "labels": []
   },
   {
     "title": "Item Road1",
     "state": "open",
     "url": "https://github.com/SeemaaKohlii/status-dashboard/issues/1",
-    "created_at": "2025-03-05T16:57:36Z"
+    "created_at": "2025-03-05T16:57:36Z",
+    "labels": []
   }
 ]
