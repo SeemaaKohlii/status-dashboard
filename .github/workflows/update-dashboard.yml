@@ -35,7 +35,6 @@ jobs:
           fi
 
           echo "Processing data..."
-          echo "Processing data..."
           jq '[.[] | select(.pull_request | not) | {title: .title, state: .state, url: .html_url, created_at: .created_at, labels: [.labels[].name]}]' issues_raw.json > docs/status.json
 
 
