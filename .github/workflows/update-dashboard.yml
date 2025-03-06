@@ -1,43 +1,47 @@
-name: Update Progress Tracker
+name: Update Status Dashboard
 
 on:
   schedule:
     - cron: "0 * * * *"  # Runs every hour
-  workflow_dispatch:  # Allows manual run
+  workflow_dispatch:  # Allows manual trigger
+
+permissions:
+  contents: write
+  issues: read
 
 jobs:
   update-dashboard:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Fetch Issues & PRs
         run: |
-          echo "Fetching issues and PRs from GitHub API..."
-          
+          echo "Fetching issues from GitHub API..."
+
           curl -s -H "Accept: application/vnd.github.v3+json" \
                -H "Authorization: Bearer ${{ secrets.PAT_TOKEN }}" \
                "https://api.github.com/repos/${{ github.repository }}/issues?state=all" > issues_raw.json
+
           echo "Raw API Response:"
           cat issues_raw.json  # 🔍 Print JSON response for debugging
-          
+
           echo "Validating JSON..."
           if ! jq -e 'if type == "array" then . else empty end' issues_raw.json; then
-            echo "Error: API did not return an array!"
+            echo "Error: API did not return an array! Check the API response above."
             exit 1
           fi
 
           echo "Processing data..."
           jq '[.[] | select(.pull_request | not) | {title: .title, state: .state, url: .html_url, created_at: .created_at}]' issues_raw.json > docs/status.json
 
-          echo "Updated status.json:"
-          cat docs/status.json
-
       - name: Commit & Push Changes
         run: |
           git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions@github.com"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
           git add docs/status.json
-          git commit -m "Update progress tracker [CI Skip]" || exit 0
+          git commit -m "Updated issue list"
           git push
