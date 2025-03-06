@@ -1,0 +1,41 @@
+name: Update Progress Tracker
+
+on:
+  schedule:
+    - cron: "0 * * * *"  # Runs every hour
+  workflow_dispatch:  # Allows manual run
+
+jobs:
+  update-dashboard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Fetch Issues & PRs
+        run: |
+          echo "Fetching issues and PRs from GitHub API..."
+          
+          curl -s -H "Accept: application/vnd.github.v3+json" \
+               -H "Authorization: Bearer ${{ secrets.PAT_TOKEN }}" \
+               "https://api.github.com/repos/${{ github.repository }}/issues?state=all" > issues_raw.json
+
+          echo "Validating JSON..."
+          if ! jq -e 'if type == "array" then . else empty end' issues_raw.json; then
+            echo "Error: API did not return an array!"
+            exit 1
+          fi
+
+          echo "Processing data..."
+          jq '[.[] | select(.pull_request | not) | {title: .title, state: .state, url: .html_url, created_at: .created_at}]' issues_raw.json > docs/status.json
+
+          echo "Updated status.json:"
+          cat docs/status.json
+
+      - name: Commit & Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions@github.com"
+          git add docs/status.json
+          git commit -m "Update progress tracker [CI Skip]" || exit 0
+          git push
